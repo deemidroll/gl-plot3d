@@ -747,7 +747,7 @@ function createScene(options) {
       //Render transparent pass
       gl.enable(gl.BLEND)
       gl.blendEquation(gl.FUNC_ADD)
-      gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA)
+      gl.blendFunc(gl.ONE_MINUS_DST_ALPHA, gl.ONE_MINUS_SRC_ALPHA)
       gl.colorMask(true, true, true, true)
       gl.depthMask(false)
       gl.clearColor(0,0,0,0)
