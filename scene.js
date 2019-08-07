@@ -700,9 +700,7 @@ function createScene(options) {
     gl.disable(gl.CULL_FACE)  //most visualization surfaces are 2 sided
 
     //Render opaque pass
-    var hasTransparent = false
     if(axes.enable) {
-      hasTransparent = hasTransparent || axes.isTransparent()
       axes.draw(cameraParams)
     }
     spikes.axes = axes
@@ -712,6 +710,7 @@ function createScene(options) {
 
     gl.disable(gl.CULL_FACE)  //most visualization surfaces are 2 sided
 
+    var hasTransparent = false
     for(var i=0; i<numObjs; ++i) {
       var obj = objects[i]
       obj.axes = axes
@@ -745,7 +744,15 @@ function createScene(options) {
       gl.blendEquation(gl.FUNC_ADD)
       gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA)
       gl.colorMask(true, true, true, true)
-      gl.depthMask(false)
+
+      if(obj._trace && obj._trace.data && obj._trace.data.type &&
+        (obj._trace.data.type === 'scatter3d')
+      ) {
+        gl.depthMask(true)
+      } else {
+        gl.depthMask(false)
+      }
+
       gl.clearColor(0,0,0,0)
       gl.clear(gl.COLOR_BUFFER_BIT)
       //Render transparent objects
