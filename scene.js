@@ -726,17 +726,14 @@ function createScene(options) {
 
     if(hasTransparent) {
       //Render transparent pass
+
       accumBuffer.shape = viewShape
       accumBuffer.bind()
       gl.clear(gl.DEPTH_BUFFER_BIT)
       gl.colorMask(false, false, false, false)
       gl.depthMask(true)
       gl.depthFunc(gl.LESS)
-
-      //Render forward facing objects
-      if(axes.enable && axes.isTransparent()) {
-        axes.drawTransparent(cameraParams)
-      }
+      //Render opaque objects
       for(var i=0; i<numObjs; ++i) {
         var obj = objects[i]
         if(obj.isOpaque && obj.isOpaque()) {
@@ -744,7 +741,6 @@ function createScene(options) {
         }
       }
 
-      //Render transparent pass
       gl.enable(gl.BLEND)
       gl.blendEquation(gl.FUNC_ADD)
       gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA)
@@ -752,11 +748,7 @@ function createScene(options) {
       gl.depthMask(false)
       gl.clearColor(0,0,0,0)
       gl.clear(gl.COLOR_BUFFER_BIT)
-
-      if(axes.isTransparent()) {
-        axes.drawTransparent(cameraParams)
-      }
-
+      //Render transparent objects
       for(var i=0; i<numObjs; ++i) {
         var obj = objects[i]
         if(obj.isTransparent && obj.isTransparent()) {
